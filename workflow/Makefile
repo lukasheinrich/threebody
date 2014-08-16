@@ -1,5 +1,6 @@
-PYTHIA = /Users/lukas/heptools/pythia8186
-HEPMC = /Users/lukas/heptools/local
+PYTHIA   = /Users/lukas/heptools/pythia8186
+HEPMC    = /Users/lukas/heptools/local
+MADGRAPH = /Users/lukas/heptools/madgraph-1.5.10
 
 all: rivetanalysis/plots
 
