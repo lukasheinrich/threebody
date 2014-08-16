@@ -1,15 +1,13 @@
-PYTHIA   = /Users/lukas/heptools/pythia8186
+PYTHIA   = /Users/lukas/heptools/local
 HEPMC    = /Users/lukas/heptools/local
 MADGRAPH = /Users/lukas/heptools/madgraph-1.5.10
 
 all: rivetanalysis/plots
 
-madgraphrun/Events/run_01/events.lhe.gz: mg5steering.cmd
+madgraphrun/Events/run_01/events.lhe: mg5steering.cmd param_card_stop3body.dat proc_card_mg5_stop.dat
 	$(MADGRAPH)/bin/mg5 -f mg5steering.cmd
-	
-madgraphrun/Events/run_01/events.lhe: madgraphrun/Events/run_01/events.lhe.gz
-	gunzip -c $< > $@
-	
+	gunzip -c madgraphrun/Events/run_01/events.lhe.gz > $@
+
 pythiarun/pythiarun: pythiarun/pythiarun.cxx
 	c++ -O2 -ansi -pedantic -W -Wall -Wshadow -m64 -Wno-shadow -I$(PYTHIA)/include -I$(HEPMC)/include \
 		$< -o $@ \
