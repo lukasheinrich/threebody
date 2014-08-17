@@ -4,7 +4,7 @@ MADGRAPH = /Users/lukas/heptools/madgraph-1.5.10
 
 all: rivetanalysis/plots
 
-madgraphrun/Events/run_01/events.lhe: mg5steering.cmd param_card_stop3body.dat proc_card_mg5_stop.dat
+madgraphrun/Events/run_01/events.lhe: mg5steering.cmd madgraphcards/param_card_stop3body.dat madgraphcards/proc_card_mg5_stop.dat
 	$(MADGRAPH)/bin/mg5 -f mg5steering.cmd
 	gunzip -c madgraphrun/Events/run_01/events.lhe.gz > $@
 
