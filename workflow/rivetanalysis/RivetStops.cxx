@@ -4,35 +4,30 @@
 
 namespace Rivet {
   
-	class StopThreeBody : public Analysis {  
-	public:
+  class StopThreeBody : public Analysis {  
+  public:
+    StopThreeBody() : Analysis("StopThreeBody") { }    
     
-		/// Default constructor
-		StopThreeBody() : Analysis("StopThreeBody") { }    
+    void init() { 
+      const FinalState cnfs;
+      addProjection(MissingMomentum(cnfs), "ETmiss");
+      _histMET    = bookHisto1D("MET", 100, 0, 3000);
+    }
     
+    void analyze(const Event& event) {
+      const double weight = event.weight();
+      const MissingMomentum& met = applyProjection<MissingMomentum>(event, "ETmiss");
+      _histMET->fill(met.scalarEt(),weight);
+    }
     
-		/// @name Analysis methods
-		//@{
-		void init() { 
-			const FinalState cnfs;
-			addProjection(MissingMomentum(cnfs), "ETmiss");
-			_histMET    = bookHisto1D("MET", 100, 0, 3000);
-		}
-    
-		void analyze(const Event& event) {
-			const double weight = event.weight();
-			const MissingMomentum& met = applyProjection<MissingMomentum>(event, "ETmiss");
-			_histMET->fill(met.scalarEt(),weight);
-		}
-    
-		void finalize(){
-			MSG_DEBUG("Finalize");			
-			scale(_histMET, 1/sumOfWeights());
-		}
+    void finalize(){
+      MSG_DEBUG("Finalize");			
+      scale(_histMET, 1/sumOfWeights());
+    }
 
-	private:
-		Histo1DPtr _histMET;
-	};
+  private:
+    Histo1DPtr _histMET;
+  };
 
-	DECLARE_RIVET_PLUGIN(StopThreeBody);
+  DECLARE_RIVET_PLUGIN(StopThreeBody);
 }
