@@ -13,3 +13,7 @@ Setup
 	workon threebody
 	pip install $PWD
 	workon threebody #optional, resource $PATH for tab completion
+	
+Details
+-------
+For EVGEN generation using `asetup 18.1.0,here` works as an Athena Release
