@@ -3,7 +3,7 @@ HEPMC    = /Users/lukas/heptools/local
 MADGRAPH = /Users/lukas/heptools/madgraph-1.5.10
 INKSCAPE = /Applications/Inkscape.app/Contents/Resources/bin/inkscape
 
-all: rivetanalysis/plots
+all: rivetanalysis/plots mcviz.pdf
 
 madgraphrun/Events/run_01/events.lhe: mg5steering.cmd madgraphcards/param_card_stop3body.dat madgraphcards/proc_card_mg5_stop.dat
 	$(MADGRAPH)/bin/mg5 -f mg5steering.cmd
@@ -28,11 +28,12 @@ rivetanalysis/plots : rivetanalysis/Rivet.yoda
 	rivet-mkhtml rivetanalysis/Rivet.yoda -o rivetanalysis/plots
 
 mcviz.svg: pythiarun/output.hepmc
-	mcviz --demo $<
+	mcviz --demo $<:3
 
 mcviz.pdf: mcviz.svg
 	$(INKSCAPE) --export-pdf $@ $< --verb=FitCanvasToDrawing
-
+	pdfcrop $@
+	mv $(basename $@)-crop.pdf $@
 clean:
 	rm -rf madgraphrun
 	rm -rf pythiarun/pythiarun
