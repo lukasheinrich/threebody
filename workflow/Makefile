@@ -44,6 +44,11 @@ gen_tf/evgen.pool.root: $(MADEVENTDIR)/events.lhe._0001.tar.gz
 	--jobConfig ../evgenJO.py --firstEvent 0 --inputGeneratorFile $(MADEVENTDIR)/events.lhe._0001.tar.gz \
 	--outputEVNTFile evgen.pool.root
 
+gen_tf/output.NTUP_TRUTH.root: gen_tf/evgen.pool.root
+	cd gen_tf && \
+	Reco_trf.py preExec="rec.doApplyAODFix.set_Value_and_Lock(False);from D3PDMakerConfig.D3PDMakerFlags import D3PDMakerFlags;D3PDMakerFlags.TruthWriteHadrons=True" \
+	inputEVNTFile=evgen.pool.root outputNTUP_TRUTHFile=output.NTUP_TRUTH.root
+
 mcviz.svg: pythiarun/output.hepmc
 	mcviz --demo $<:4
 
