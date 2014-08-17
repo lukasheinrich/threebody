@@ -1,6 +1,6 @@
 import madgraphcards/proc_card_mg5_stop.dat
 set automatic_html_opening False
 launch
-parton
 madgraphcards/param_card_stop3body.dat
 done
+quit
