@@ -1,7 +1,7 @@
 PYTHIA   = /Users/lukas/heptools/local
 HEPMC    = /Users/lukas/heptools/local
-#MADGRAPH = /Users/lukas/heptools/madgraph-1.5.10
-MADGRAPH = /tmp/lheinric/madgraph-1.5.10
+MADGRAPH = /Users/lukas/heptools/madgraph-1.5.10
+#MADGRAPH = /tmp/lheinric/madgraph-1.5.10
 INKSCAPE = /Applications/Inkscape.app/Contents/Resources/bin/inkscape
 
 all: rivetanalysis/plots mcviz.pdf
@@ -50,7 +50,7 @@ gen_tf/output.NTUP_TRUTH.root: gen_tf/evgen.pool.root
 	inputEVNTFile=evgen.pool.root outputNTUP_TRUTHFile=output.NTUP_TRUTH.root
 
 mcviz.svg: pythiarun/output.hepmc
-	mcviz --demo $<:4
+	mcviz -sFancyLines -sSimpleColors -tGluballs -e fdp -tNoKinks $<:4
 
 mcviz.pdf: mcviz.svg
 	$(INKSCAPE) --export-pdf $@ $< --verb=FitCanvasToDrawing
