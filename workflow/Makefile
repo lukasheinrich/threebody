@@ -28,7 +28,7 @@ rivetanalysis/plots : rivetanalysis/Rivet.yoda
 	rivet-mkhtml rivetanalysis/Rivet.yoda -o rivetanalysis/plots
 
 mcviz.svg: pythiarun/output.hepmc
-	mcviz --demo $<:3
+	mcviz --demo $<:4
 
 mcviz.pdf: mcviz.svg
 	$(INKSCAPE) --export-pdf $@ $< --verb=FitCanvasToDrawing
