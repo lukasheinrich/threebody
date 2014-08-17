@@ -1,6 +1,7 @@
 PYTHIA   = /Users/lukas/heptools/local
 HEPMC    = /Users/lukas/heptools/local
 MADGRAPH = /Users/lukas/heptools/madgraph-1.5.10
+INKSCAPE = /Applications/Inkscape.app/Contents/Resources/bin/inkscape
 
 all: rivetanalysis/plots
 
@@ -26,6 +27,12 @@ rivetanalysis/Rivet.yoda: rivetanalysis/RivetStops.so pythiarun/output.hepmc
 rivetanalysis/plots : rivetanalysis/Rivet.yoda
 	rivet-mkhtml rivetanalysis/Rivet.yoda -o rivetanalysis/plots
 
+mcviz.svg: pythiarun/output.hepmc
+	mcviz --demo $<
+
+mcviz.pdf: mcviz.svg
+	$(INKSCAPE) --export-pdf $@ $< --verb=FitCanvasToDrawing
+
 clean:
 	rm -rf madgraphrun
 	rm -rf pythiarun/pythiarun
@@ -33,5 +40,6 @@ clean:
 	rm -rf rivetanalysis/Rivet.yoda
 	rm -rf rivetanalysis/RivetStops.so
 	rm -rf rivetanalysis/plots
+	rm -rf mcviz.pdf mcviz.svg
 
 .PHONY: clean
