@@ -45,7 +45,7 @@ gen_tf/evgen.pool.root: $(MADEVENTDIR)/events.lhe._0001.tar.gz
 	cd gen_tf && \
 	JOBOPTSEARCHPATH=/cvmfs/atlas.cern.ch/repo/sw/Generators/MC12JobOptions/latest/common:$(JOBOPTSEARCHPATH) \
 	Generate_tf.py --randomSeed 1234 --runNumber 10003 --ecmEnergy 14000 --maxEvents 2 \
-	--jobConfig ../evgenJO.py --firstEvent 0 --inputGeneratorFile $(MADEVENTDIR)/events.lhe._0001.tar.gz \
+	--jobConfig ../jobopts/evgenJO.py --firstEvent 0 --inputGeneratorFile $(MADEVENTDIR)/events.lhe._0001.tar.gz \
 	--outputEVNTFile evgen.pool.root
 
 gen_tf/output.NTUP_TRUTH.root: gen_tf/evgen.pool.root
