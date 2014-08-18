@@ -17,3 +17,8 @@ Setup
 Details
 -------
 For EVGEN generation using `asetup 18.1.0,here` works as an Athena Release
+
+Requirements
+-------
+
+madgraph 1.5.10: `bzr branch lp:~maddevelopers/mg5amcnlo/1.5.10 madgraph-1.5.10`

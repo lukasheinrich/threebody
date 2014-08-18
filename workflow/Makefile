@@ -1,6 +1,6 @@
 PYTHIA   = /Users/lukas/heptools/local
 HEPMC    = /Users/lukas/heptools/local
-MADGRAPH = /Users/lukas/heptools/madgraph-1.5.10
+MADGRAPH = $(PWD)/madgraph-1.5.10
 #MADGRAPH = /tmp/lheinric/madgraph-1.5.10
 INKSCAPE = /Applications/Inkscape.app/Contents/Resources/bin/inkscape
 
@@ -36,11 +36,15 @@ $(MADEVENTDIR)/events.lhe._0001.evts: $(MADEVENTDIR)/events.lhe
 $(MADEVENTDIR)/events.lhe._0001.tar.gz: $(MADEVENTDIR)/events.lhe._0001.evts
 	tar --directory $(MADEVENTDIR) -cvzf $(MADEVENTDIR)/events.lhe._0001.tar.gz events.lhe._0001.evts
 
+gen_tf/events.hepmc: gen_tf/evgen.pool.root
+	cd gen_tf && \
+	athena.py ../jobopts/writeHepMC.py 2>&1 | tee writehepmc.log
+
 gen_tf/evgen.pool.root: $(MADEVENTDIR)/events.lhe._0001.tar.gz
 	mkdir -p gen_tf
 	cd gen_tf && \
 	JOBOPTSEARCHPATH=/cvmfs/atlas.cern.ch/repo/sw/Generators/MC12JobOptions/latest/common:$(JOBOPTSEARCHPATH) \
-	Generate_tf.py --randomSeed 1234 --runNumber 10003 --ecmEnergy 14000 --maxEvents 100 \
+	Generate_tf.py --randomSeed 1234 --runNumber 10003 --ecmEnergy 14000 --maxEvents 2 \
 	--jobConfig ../evgenJO.py --firstEvent 0 --inputGeneratorFile $(MADEVENTDIR)/events.lhe._0001.tar.gz \
 	--outputEVNTFile evgen.pool.root
 
