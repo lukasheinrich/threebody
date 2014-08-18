@@ -8,7 +8,8 @@ all: rivetanalysis/plots mcviz.pdf
 
 MADEVENTDIR=$(PWD)/madgraphrun/Events/run_01
 
-$(MADEVENTDIR)/events.lhe: mg5steering.cmd madgraphcards/param_card_stop3body.dat madgraphcards/proc_card_mg5_stop.dat
+$(MADEVENTDIR)/events.lhe: mg5steering.cmd madgraphcards/param_card_squark3body.dat madgraphcards/proc_card_mg5_squark.dat
+	rm -rf $(PWD/madgraphrun
 	$(MADGRAPH)/bin/mg5 -f mg5steering.cmd
 	gunzip -c $(MADEVENTDIR)/events.lhe.gz > $@
 
@@ -27,8 +28,8 @@ rivetanalysis/RivetStops.so : rivetanalysis/RivetStops.cxx
 rivetanalysis/Rivet.yoda: rivetanalysis/RivetStops.so pythiarun/output.hepmc
 	rivet pythiarun/output.hepmc -a StopThreeBody --analysis-path=$(PWD)/rivetanalysis --histo-file=rivetanalysis/Rivet.yoda
 
-rivetanalysis/plots : rivetanalysis/Rivet.yoda
-	rivet-mkhtml rivetanalysis/Rivet.yoda -o rivetanalysis/plots
+rivetanalysis/plots : rivetanalysis/Rivet.yoda rivetanalysis/RivetStops.plot
+	rivet-mkhtml -c rivetanalysis/RivetStops.plot rivetanalysis/Rivet.yoda -o rivetanalysis/plots
 
 $(MADEVENTDIR)/events.lhe._0001.evts: $(MADEVENTDIR)/events.lhe
 	ln $(MADEVENTDIR)/events.lhe $(MADEVENTDIR)/events.lhe._0001.evts
@@ -54,7 +55,7 @@ gen_tf/output.NTUP_TRUTH.root: gen_tf/evgen.pool.root
 	inputEVNTFile=evgen.pool.root outputNTUP_TRUTHFile=output.NTUP_TRUTH.root
 
 mcviz.svg: pythiarun/output.hepmc
-	mcviz -sFancyLines -sSimpleColors -tGluballs -e fdp -tNoKinks $<:4
+	mcviz --demo $<:4
 
 mcviz.pdf: mcviz.svg
 	$(INKSCAPE) --export-pdf $@ $< --verb=FitCanvasToDrawing

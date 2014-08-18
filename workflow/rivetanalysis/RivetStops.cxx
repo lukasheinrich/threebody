@@ -11,13 +11,13 @@ namespace Rivet {
     void init() { 
       const FinalState cnfs;
       addProjection(MissingMomentum(cnfs), "ETmiss");
-      _histMET    = bookHisto1D("MET", 100, 0, 3000);
+      _histMET    = bookHisto1D("MET", 100, 0, 600);
     }
     
     void analyze(const Event& event) {
       const double weight = event.weight();
       const MissingMomentum& met = applyProjection<MissingMomentum>(event, "ETmiss");
-      _histMET->fill(met.scalarEt(),weight);
+      _histMET->fill((-met.vectorEt()).mod(),weight);
     }
     
     void finalize(){
