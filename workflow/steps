@@ -1,0 +1,3 @@
+AtlasG4_trf.py inputEvgenFile=evgen.pool.root outputHitsFile=g4hits.pool.root maxEvents=1 skipEvents=0 randomSeed=1234 geometryVersion=ATLAS-GEO-16-00-00 conditionsTag=OFLCOND-SDR-BS7T-04-00 2>&1 | tee g4.log
+Digi_trf.py inputHitsFile=g4hits.pool.root outputRDOFile=g4digi.pool.root maxEvents=1 skipEvents=0 geometryVersion=ATLAS-GEO-16-00-00  conditionsTag=OFLCOND-SDR-BS7T-04-00 2>&1 | tee log
+Reco_trf.py  inputRDOFile=g4digi.pool.root outputAODFile=aod.pool.root  2>&1 | tee reco.log
