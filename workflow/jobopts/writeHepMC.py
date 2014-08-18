@@ -11,22 +11,3 @@ McWriter = HepMcWriterTool(McEvents="GEN_EVENT", Output="events.hepmc")
 job += GenEventAsciiWriter(McWriter=McWriter, OutputLevel=INFO)
 
 theApp.EvtMax = 10
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
