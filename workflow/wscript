@@ -7,17 +7,25 @@ from waflib import TaskGen
 from waflib.Task import Task,always_run
 
 def options(ctx):
-  ctx.add_option('-m','--with-madgraph',dest = 'madgraph', action='store', default=None, help='madgraph location')
-  ctx.add_option('-p','--with-pythia',dest = 'pythia', action='store', default=None, help='pythia location')
-  ctx.add_option('-e','--with-hepmc',dest = 'hepmc', action='store', default=None, help='pythia location')
+  ctx.add_option('--with-madgraph',dest = 'madgraph', action='store', default=None, help='madgraph location')
+  ctx.add_option('--with-pythia',dest = 'pythia', action='store', default=None, help='pythia location')
+  ctx.add_option('--with-hepmc',dest = 'hepmc', action='store', default=None, help='pythia location')
+  ctx.add_option('--with-inkscape',dest = 'inkscape', action='store', default=None, help='inkscape')
+  ctx.add_option('--with-mcviz',dest = 'mcviz', action='store', default=None, help='mcviz')
+  ctx.add_option('--with-rivet',dest = 'rivet', action='store', default=None, help='rivet')
+
+def path_and_bin(pth):
+  return [pth,pth+'/bin'] if pth is not None else []
 
 def configure(ctx):
   print('→ configuring the project in ' + ctx.path.abspath())
-  ctx.find_program('mcviz', var='MCVIZ')
-  ctx.find_program('inkscape', var='INKSCAPE')
-  ctx.env.PYTHIA = ctx.options.pythia #use pythia-config somehow
-  ctx.env.HEPMC =  ctx.options.hepmc #use pythia-config somehow
-  ctx.env.MADGRAPH = ctx.options.madgraph + '/bin/mg5'
+  ctx.find_program('mg5', var='MADGRAPH', path_list=path_and_bin(ctx.options.madgraph))
+  ctx.find_program('pythia8-config', var='PYTHIA', path_list=path_and_bin(ctx.options.pythia))
+  ctx.find_program('rivet', var='RIVET', path_list=path_and_bin(ctx.options.rivet))
+  ctx.find_program('rivet-mkhtml', var='RIVETMKHTML', path_list=path_and_bin(ctx.options.rivet))
+  ctx.find_program('rivet-buildplugin', var='RIVETBLD', path_list=path_and_bin(ctx.options.rivet))
+  ctx.find_program('mcviz', var='MCVIZ', path_list=path_and_bin(ctx.options.mcviz))
+  ctx.find_program('inkscape', var='INKSCAPE', path_list=path_and_bin(ctx.options.inkscape))
 
 def test(ctx):
   print ctx.path.ant_glob('madgraphcards/*.dat')
@@ -37,16 +45,17 @@ def build(ctx):
       target='madgraphrun/Events/run_01/events.lhe')
 
   ctx(rule='''
-      c++ -O2 -ansi -pedantic -W -Wall -Wshadow -m64 -Wno-shadow -I${PYTHIA}/include -I${HEPMC}/include \
+      c++ -O2 -ansi -pedantic -W -Wall -Wshadow -m64 -Wno-shadow `${PYTHIA} --cxxflags` \
 		  ${SRC} -o ${TGT} \
-		  -L${PYTHIA}/lib/archive -lpythia8 -llhapdfdummy -lpythia8tohepmc \
-		  -L${HEPMC}/lib -lHepMC
+		  `${PYTHIA} --libs --hepmc|sed 's|\-lhepmcinterface||'` \
+      -lpythia8tohepmc \
+      -L`${PYTHIA} --libdir`/archive 
       ''',
       source = ['pythia/pythiarun.cxx'],
-      target = 'pythia/pythiarun')
+      target = 'pythiarun/pythiarun')
 
-  ctx(rule='PYTHIA8DATA=${PYTHIA}/xmldoc ${SRC[0].abspath()} ${SRC[1].abspath()} ${TGT}',
-      source = ['pythia/pythiarun','pythiasteering.cmnd','madgraphrun/Events/run_01/events.lhe'],
+  ctx(rule='PYTHIA8DATA=`${PYTHIA} --xmldoc` ${SRC[0].abspath()} ${SRC[1].abspath()} ${TGT}',
+      source = ['pythiarun/pythiarun','pythiasteering.cmnd','madgraphrun/Events/run_01/events.lhe'],
       target = 'pythiarun/output.hepmc',
       name = 'pythia')
 
