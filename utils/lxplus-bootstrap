@@ -1,0 +1,16 @@
+home=$PWD
+virtualenv --system-site-packages env
+source env/bin/activate
+git clone https://github.com/lukasheinrich/hepmcanalysis.git
+cd hepmcanalysis
+python setup.py install
+python setup.py install
+
+git clone https://github.com/lukasheinrich/threebody.git
+cd threebody
+HEPMCPATH=/afs/cern.ch/sw/lcg/external/HepMC/2.06.06/x86_64-slc6-gcc46-opt python setup.py install
+cd $home
+rm -rf threebody hepmcanalysis
+
+echo 'source env/bin/activate' >> env.sh
+echo 'export LD_LIBRARY_PATH=/afs/cern.ch/sw/lcg/external/HepMC/2.06.06/x86_64-slc6-gcc46-opt/lib:$LD_LIBRARY_PATH' >> env.sh
