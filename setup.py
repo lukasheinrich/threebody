@@ -9,5 +9,5 @@ setup(
       scripts=['utils/readhepmc.py','utils/jj2.py'],
       install_requires=['pyhepmc>=0.5','mcviz','hepmcanalysis'],
       dependency_links=['https://github.com/mcviz/mcviz/tarball/master#egg=mcviz',
-                        'https://github.com/lheinric/hepmcanalysis/tarball/master#egg=hepmcanalysis']
+                        'https://github.com/lukasheinrich/hepmcanalysis/tarball/master#egg=hepmcanalysis']
       )
