@@ -1,5 +1,5 @@
 !-------- Settings used in the main program.
-Main:numberOfEvents   = 5000       ! number of events to generate (-1 for all)
+Main:numberOfEvents   = {{NEVTS}}   ! number of events to generate (-1 for all)
 Main:timesAllowErrors = 3          ! how many aborts before run stops
 Main:spareMode1 = 0                ! skip n events at beginning of file
 
@@ -12,7 +12,7 @@ Next:numberShowProcess = 1         ! print process record n times
 Next:numberShowEvent   = 1         ! print event record n times
 
 !-------- Madgraph run:
-Beams:LHEF = madgraphrun/Events/run_01/events.lhe
+Beams:LHEF = {{LHEF}}
 Beams:frameType = 4
 
 !-------- Enable matching

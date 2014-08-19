@@ -19,6 +19,7 @@ def path_and_bin(pth):
 
 def configure(ctx):
   print('→ configuring the project in ' + ctx.path.abspath())
+  ctx.find_program('jj2.py', var='JJ2')
   ctx.find_program('mg5', var='MADGRAPH', path_list=path_and_bin(ctx.options.madgraph))
   ctx.find_program('pythia8-config', var='PYTHIA', path_list=path_and_bin(ctx.options.pythia))
   ctx.find_program('rivet', var='RIVET', path_list=path_and_bin(ctx.options.rivet))
@@ -32,17 +33,18 @@ def test(ctx):
 
 def build(ctx):
   ctx(rule='''
+        ${JJ2} ${SRC[0].abspath()} -v PROC=${SRC[2].abspath()} -v PARAM=${SRC[1].abspath()} > mg5.cmd
         mkdir -p madgraphcards
         cp ${SRC[1].abspath()} ${SRC[2].abspath()} madgraphcards
-        ${MADGRAPH} -f ${SRC[0].abspath()}
+        ${MADGRAPH} -f mg5.cmd
       ''',
-      source=['mg5steering.cmd','madgraph/param_card_squark3body.dat','madgraph/proc_card_mg5_squark.dat'],
-      target='madgraphrun/Events/run_01/events.lhe.gz',
+      source=['mg5steering.tplt','madgraph/param_card_squark3body.dat','madgraph/proc_card_mg5_squark.dat'],
+      target='madgraphrun/Events/output/events.lhe.gz',
       name = 'madgraph')
 
   ctx(rule='gunzip -c ${SRC} > ${TGT}',
-      source='madgraphrun/Events/run_01/events.lhe.gz',
-      target='madgraphrun/Events/run_01/events.lhe')
+      source='madgraphrun/Events/output/events.lhe.gz',
+      target='madgraphrun/Events/output/events.lhe')
 
   ctx(rule='''
       c++ -O2 -ansi -pedantic -W -Wall -Wshadow -m64 -Wno-shadow `${PYTHIA} --cxxflags` \
@@ -54,8 +56,10 @@ def build(ctx):
       source = ['pythia/pythiarun.cxx'],
       target = 'pythiarun/pythiarun')
 
-  ctx(rule='PYTHIA8DATA=`${PYTHIA} --xmldoc` ${SRC[0].abspath()} ${SRC[1].abspath()} ${TGT}',
-      source = ['pythiarun/pythiarun','pythiasteering.cmnd','madgraphrun/Events/run_01/events.lhe'],
+  ctx(rule='''
+      ${JJ2} ${SRC[1].abspath()} -v NEVTS=100 -v LHEF=${SRC[2].abspath()} > pythiasteering.cmnd 
+      PYTHIA8DATA=`${PYTHIA} --xmldoc` ${SRC[0].abspath()} pythiasteering.cmnd ${TGT}''',
+      source = ['pythiarun/pythiarun','pythiasteering.tplt','madgraphrun/Events/output/events.lhe'],
       target = 'pythiarun/output.hepmc',
       name = 'pythia')
 

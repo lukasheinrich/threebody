@@ -6,5 +6,5 @@ setup(
       packages = find_packages(),
       author = 'Lukas Heinrich',
       author_email = 'lukas.heinrich@cern.ch',
-      scripts=['utils/readhepmc.py'],
+      scripts=['utils/readhepmc.py','utils/jj2.py'],
       )

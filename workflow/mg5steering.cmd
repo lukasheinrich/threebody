@@ -1,6 +1,0 @@
-import madgraphcards/proc_card_mg5_squark.dat
-set automatic_html_opening False
-launch
-madgraphcards/param_card_squark3body.dat
-done
-quit
