@@ -23,7 +23,7 @@ def main():
   for i,e in enumerate(events(g)):
     print '----------------'
     finalstate = [p for p in e.particles() if p.status()==1]
-    print 'event #{}: number of particles in event: {}'.format(i,len(finalstate))
+    print 'event #{0}: number of particles in event: {1}'.format(i,len(finalstate))
     
 if __name__ == '__main__':
   main()
