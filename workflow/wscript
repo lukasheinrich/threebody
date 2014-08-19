@@ -34,8 +34,6 @@ def test(ctx):
 def build(ctx):
   ctx(rule='''
         ${JJ2} ${SRC[0].abspath()} -v PROC=${SRC[2].abspath()} -v PARAM=${SRC[1].abspath()} > mg5.cmd
-        mkdir -p madgraphcards
-        cp ${SRC[1].abspath()} ${SRC[2].abspath()} madgraphcards
         ${MADGRAPH} -f mg5.cmd
       ''',
       source=['mg5steering.tplt','madgraph/param_card_squark3body.dat','madgraph/proc_card_mg5_squark.dat'],
@@ -63,7 +61,7 @@ def build(ctx):
       target = 'pythiarun/output.hepmc',
       name = 'pythia')
 
-  ctx(rule='${MCVIZ} --demo ${SRC}',
+  ctx(rule='${MCVIZ} --demo ${SRC} --output_file ${TGT}',
       source='pythiarun/output.hepmc',
       target = 'mcviz.svg')
 
@@ -80,12 +78,12 @@ def build(ctx):
       source='rivet/RivetStops.cxx',
       target = 'rivetanalysis/RivetStops.so')
 
-  ctx(rule='''rivet ${SRC[1].abspath()} -a StopThreeBody --analysis-path=rivetanalysis --histo-file=${TGT}''',
+  ctx(rule='''rivet ${SRC[1].abspath()} -a StopThreeBody --analysis-path=rivetanalysis --histo-file=${TGT[0].abspath()}''',
       source=['rivetanalysis/RivetStops.so','pythiarun/output.hepmc'],
       target = 'rivetanalysis/Rivet.yoda',
       name = 'rivet')
 
-  ctx(rule='''rivet-mkhtml -c ${SRC[1].abspath()} ${SRC[0].abspath()} -o rivetanalysis/plots''',
+  ctx(rule='''rivet-mkhtml -c ${SRC[1].abspath()} -o rivetanalysis/plots ${SRC[0].abspath()}''',
       source=['rivetanalysis/Rivet.yoda','rivet/RivetStops.plot'],
       target = 'rivetanalysis/plots/index.html',
       name = 'plots')
