@@ -44,6 +44,29 @@ def build(ctx):
       source='madgraphrun/Events/output/events.lhe.gz',
       target='madgraphrun/Events/output/events.lhe')
 
+  ctx(rule='ln ${SRC} ${TGT}',
+      source='madgraphrun/Events/output/events.lhe',
+      target='madgraphrun/Events/output/events.lhe._0001.evts')
+
+  ctx(rule='tar --directory `dirname ${SRC[0].abspath()}` -cvzf ${TGT[0].abspath()} ${SRC[0]}',
+      source='madgraphrun/Events/output/events.lhe._0001.evts',
+      target='madgraphrun/Events/output/events.lhe._0001.tar.gz')
+
+  ctx(rule='tar --directory `dirname ${SRC[0].abspath()}` -cvzf ${TGT[0].abspath()} ${SRC[0]}',
+      source='madgraphrun/Events/output/events.lhe._0001.evts',
+      target='madgraphrun/Events/output/events.lhe._0001.tar.gz')
+
+  ctx(rule='''
+            mkdir -p gen_tf && \
+            cd gen_tf && \
+            JOBOPTSEARCHPATH=/cvmfs/atlas.cern.ch/repo/sw/Generators/MC12JobOptions/latest/common:$JOBOPTSEARCHPATH \
+            Generate_tf.py --randomSeed 1234 --runNumber 10003 --ecmEnergy 14000 --maxEvents 2 \
+            --jobConfig ../jobopts/evgenJO.py --firstEvent 0 --inputGeneratorFile ${SRC[0].abspath()} \
+            --outputEVNTFile ${TGT[0].abspath()}
+           ''',
+      source='madgraphrun/Events/output/events.lhe._0001.tar.gz',
+      target='evgenrun/evgen.pool.root')
+
   ctx(rule='''
       c++ -O2 -ansi -pedantic -W -Wall -Wshadow -m64 -Wno-shadow `${PYTHIA} --cxxflags` \
 		  ${SRC} -o ${TGT} \
