@@ -6,6 +6,7 @@ cd hepmcanalysis
 python setup.py install
 python setup.py install
 
+cd $home
 git clone https://github.com/lukasheinrich/threebody.git
 cd threebody
 HEPMCPATH=/afs/cern.ch/sw/lcg/external/HepMC/2.06.06/x86_64-slc6-gcc46-opt python setup.py install
