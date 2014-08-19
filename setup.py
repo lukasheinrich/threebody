@@ -8,6 +8,5 @@ setup(
       author_email = 'lukas.heinrich@cern.ch',
       scripts=['utils/readhepmc.py','utils/jj2.py'],
       install_requires=['pyhepmc>=0.5','mcviz','hepmcanalysis'],
-      dependency_links=['https://github.com/mcviz/mcviz/tarball/master#egg=mcviz',
-                        'https://github.com/lukasheinrich/hepmcanalysis/tarball/master#egg=hepmcanalysis']
+      dependency_links=['https://github.com/mcviz/mcviz/tarball/master#egg=mcviz']
       )
