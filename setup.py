@@ -7,4 +7,6 @@ setup(
       author = 'Lukas Heinrich',
       author_email = 'lukas.heinrich@cern.ch',
       scripts=['utils/readhepmc.py','utils/jj2.py'],
+      install_requires=['pyhepmc>=0.5','mcviz>=0.1'],
+      dependency_links=['https://github.com/mcviz/mcviz/tarball/master#egg=mcviz']
       )
