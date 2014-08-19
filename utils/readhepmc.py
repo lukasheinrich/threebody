@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from hepmcanalysis.events import events
-from hepmcanalysis._streamproxy import ifstream_proxy
+from hepmcanalysis.streamproxy import ifstream_proxy
 import hepmc
 import pypdt
 import argparse
