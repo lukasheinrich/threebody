@@ -19,12 +19,10 @@ Setup
 ## Bootstraps
 ### lxplus
 
-	git clone https://github.com/lukasheinrich/threebody.git 
-	cd threebody
-	virtualenv --system-site-packages threebody                                                             
-	source threebody/bin/activate                                                                           
-	HEPMCPATH=/afs/cern.ch/sw/lcg/external/HepMC/2.06.06/x86_64-slc6-gcc46-opt python setup.py install
-		
+	wget https://raw.githubusercontent.com/lukasheinrich/threebody/master/utils/lxplus-bootstrap
+	chmod +x lxplus-bootstrap
+	./lxlpus-bootsrap
+
 
 Details
 -------
