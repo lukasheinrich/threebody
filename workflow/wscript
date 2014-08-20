@@ -57,8 +57,8 @@ def build(ctx):
       target='madgraphrun/Events/output/events.lhe._0001.tar.gz')
 
   ctx(rule='''
-            mkdir -p gen_tf && \
-            cd gen_tf && \
+            mkdir -p evgenrun && \
+            cd evgenrun && \
             JOBOPTSEARCHPATH=/cvmfs/atlas.cern.ch/repo/sw/Generators/MC12JobOptions/latest/common:$JOBOPTSEARCHPATH \
             Generate_tf.py --randomSeed 1234 --runNumber 10003 --ecmEnergy 14000 --maxEvents 2 \
             --jobConfig ${SRC[0].abspath()} --firstEvent 0 --inputGeneratorFile ${SRC[1].abspath()} \
@@ -66,6 +66,29 @@ def build(ctx):
            ''',
       source='jobopts/evgenJO.py madgraphrun/Events/output/events.lhe._0001.tar.gz',
       target='evgenrun/evgen.pool.root')
+
+  ctx(rule='''
+            mkdir -p simrun && \
+            cd simrun && \
+	    AtlasG4_trf.py inputEvgenFile=${SRC[0].abspath()} outputHitsFile=${TGT[0].abspath()} maxEvents=1 skipEvents=0 randomSeed=1234 geometryVersion=ATLAS-GEO-16-00-00 conditionsTag=OFLCOND-SDR-BS7T-04-00 2>&1 | tee g4.log
+           ''',
+      source='evgenrun/evgen.pool.root',
+      target='simrun/g4hits.pool.root')
+
+  ctx(rule='''
+            mkdir -p digirun && \
+            cd digirun && \
+	    Digi_trf.py inputHitsFile=${SRC[0].abspath()} outputRDOFile=${TGT[0].abspath()} maxEvents=1 skipEvents=0 geometryVersion=ATLAS-GEO-16-00-00  conditionsTag=OFLCOND-SDR-BS7T-04-00 2>&1 | tee log           ''',
+      source='simrun/g4hits.pool.root',
+      target='digirun/g4digi.pool.root')
+
+  ctx(rule='''
+            mkdir -p recorun && \
+            cd recorun && \
+	    Reco_trf.py  inputRDOFile=${SRC[0].abspath()} outputAODFile=${TGT[0].abspath()}  2>&1 | tee reco.log
+	   ''',
+      source='digirun/g4digi.pool.root',
+      target='recorun/aod.pool.root')
 
   ctx(rule='''
       c++ -O2 -ansi -pedantic -W -Wall -Wshadow -m64 -Wno-shadow `${PYTHIA} --cxxflags` \
@@ -115,3 +138,32 @@ def build(ctx):
 
 
 
+import os
+from waflib import Utils
+from waflib.TaskGen import before_method, feature
+
+@feature('*')
+@before_method('process_source', 'process_rule')
+def post_other_task_generators_if_necessary(self):
+	if not self.bld.targets:
+		return
+
+	if not getattr(self, 'source', None):
+		return
+
+	group = self.bld.get_group(self.bld.get_group_idx(self))
+	for x in Utils.to_list(self.source):
+		y = os.path.split(x)[1]
+
+		for tg in group:
+			if id(tg) == id(self):
+				continue
+
+			if getattr(tg, 'target', None):
+				pass
+
+			for target in Utils.to_list(tg.target):
+				y2 = os.path.split(target)[1]
+
+				if y == y2:
+					tg.post()
