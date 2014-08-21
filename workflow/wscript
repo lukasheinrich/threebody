@@ -26,7 +26,7 @@ def configure(ctx):
   ctx.find_program('rivet-mkhtml', var='RIVETMKHTML', path_list=path_and_bin(ctx.options.rivet))
   ctx.find_program('rivet-buildplugin', var='RIVETBLD', path_list=path_and_bin(ctx.options.rivet))
   ctx.find_program('mcviz', var='MCVIZ', path_list=path_and_bin(ctx.options.mcviz))
-  ctx.find_program('inkscape', var='INKSCAPE', path_list=path_and_bin(ctx.options.inkscape))
+  ctx.find_program('inkscape', var='INKSCAPE', path_list=path_and_bin(ctx.options.inkscape),mandatory=False)
 
 def test(ctx):
   print ctx.path.ant_glob('madgraphcards/*.dat')
