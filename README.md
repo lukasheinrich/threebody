@@ -7,10 +7,15 @@ This is code for an upcoming analysis of ATLAS data looking for supersymmetric d
 Setup
 ------
 
-    git clone https://github.com/lukasheinrich/threebody.git ~/threebody
-    cd ~/threebody
+if you like or must use venvs:
+
     mkvirtualenv threebody
     workon threebody
+
+get the code:
+
+    git clone https://github.com/lukasheinrich/threebody.git ~/threebody
+    cd ~/threebody
     HEPMCPATH=$HOME/heptools/local pip install --editable $PWD --process-dependency-links
     cd workflow
     ./waf configure
