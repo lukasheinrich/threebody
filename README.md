@@ -45,7 +45,7 @@ Requirements
 * madgraph 1.5.10: `bzr branch lp:~maddevelopers/mg5amcnlo/1.5.10 madgraph-1.5.10`
 * pythia8: `wget http://home.thep.lu.se/~torbjorn/pythia8/pythia8186.tgz`
 * rivet (comes with HepMC): `wget http://rivet.hepforge.org/hg/bootstrap/raw-file/2.1.2/rivet-bootstrap`
-
+* inkscape (optional for some svg2pdf conversion)
 
 Get Results
 -----
